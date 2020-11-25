@@ -1,13 +1,17 @@
+import 'dart:convert';
 import 'dart:math';
 
-import 'package:com/models/dactor_model.dart';
-import 'package:com/models/data.dart';
+import 'package:com/models/DoctorDataModel.dart';
+import 'package:com/models/DoctorModel.dart';
+import 'package:com/models/docotorData.dart';
 import 'package:com/theme/light_color.dart';
 import 'package:com/theme/text_styles.dart';
 import 'package:com/theme/theme.dart';
 import 'package:com/theme/extention.dart';
+import 'package:com/util/navigation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, Object model}) : super(key: key);
@@ -17,12 +21,46 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<DoctorModel> doctorDataList;
+  List<DoctorDataModel> doctorDataList;
+  String name = "Name";
+  String token;
+  Future<DoctorModel> _futureDoctorList;
+
   @override
-  void initState() { 
-    doctorDataList = doctorMapList.map((x)=> DoctorModel.fromJson(x)).toList();
+  void initState() {
+    _getDataFromSharedPref();
     super.initState();
   }
+
+  void _getDataFromSharedPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('name');
+      token = prefs.getString('token');
+      _futureDoctorList = fetchDoctorDetails();
+    });
+  }
+
+  Future<DoctorModel> fetchDoctorDetails() async {
+    final uri = 'https://moodpath1.herokuapp.com/doctor';
+
+    final response = await http.get(uri, headers: {
+      'x-auth-token': token //do token work
+    });
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      print("data received");
+
+      return DoctorModel.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
   Widget _appBar() {
     return AppBar(
       elevation: 0,
@@ -46,7 +84,11 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
             ),
-            child: Image.asset("assets/user.png", fit: BoxFit.fill),
+            child: GestureDetector(
+                onTap: () {
+                  Navigation.navigateToUserDetails(context);
+                },
+                child: Image.asset("assets/user.png", fit: BoxFit.fill)),
           ),
         ).p(8),
       ],
@@ -58,7 +100,7 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text("Hello,", style: TextStyles.title.subTitleColor),
-        Text("Peter Parker", style: TextStyles.h1Style),
+        Text(name, style: TextStyles.h1Style),
       ],
     ).p16;
   }
@@ -131,13 +173,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _categoryCard(String title, String subtitle,{Color color, Color lightColor}) {
-     TextStyle titleStyle = TextStyles.title.bold.white;
-     TextStyle subtitleStyle = TextStyles.body.bold.white;
-     if(AppTheme.fullWidth(context) < 392){
-       titleStyle = TextStyles.body.bold.white;
-       subtitleStyle = TextStyles.bodySm.bold.white;
-     }
+  Widget _categoryCard(String title, String subtitle,
+      {Color color, Color lightColor}) {
+    TextStyle titleStyle = TextStyles.title.bold.white;
+    TextStyle subtitleStyle = TextStyles.body.bold.white;
+    if (AppTheme.fullWidth(context) < 392) {
+      titleStyle = TextStyles.body.bold.white;
+      subtitleStyle = TextStyles.bodySm.bold.white;
+    }
     return AspectRatio(
       aspectRatio: 6 / 8,
       child: Container(
@@ -172,10 +215,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Flexible(
-                      child: Text(
-                        title,
-                        style: titleStyle
-                      ).hP8,
+                      child: Text(title, style: titleStyle).hP8,
                     ),
                     SizedBox(
                       height: 10,
@@ -214,20 +254,19 @@ class _HomePageState extends State<HomePage> {
             ],
           ).hP16,
           getdoctorWidgetList()
-          
-          
         ],
       ),
     );
   }
-  Widget getdoctorWidgetList(){
-     return Column(
-       children: doctorDataList.map((x){
-            return  _doctorTile(x);
-          }).toList()
-     );
+
+  Widget getdoctorWidgetList() {
+    return Column(
+        children: doctorDataList.map((x) {
+      return _doctorTile(x);
+    }).toList());
   }
-  Widget _doctorTile(DoctorModel model) {
+
+  Widget _doctorTile(DoctorDataModel model) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       decoration: BoxDecoration(
@@ -259,7 +298,7 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(15),
                 color: randomColor(),
               ),
-              child: Image.asset(
+              child: Image.network(
                 model.image,
                 height: 50,
                 width: 50,
@@ -269,7 +308,7 @@ class _HomePageState extends State<HomePage> {
           ),
           title: Text(model.name, style: TextStyles.title.bold),
           subtitle: Text(
-           model.type,
+            model.type,
             style: TextStyles.bodySm.subTitleColor.bold,
           ),
           trailing: Icon(
@@ -308,20 +347,39 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: _appBar(),
       backgroundColor: Theme.of(context).backgroundColor,
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                _header(),
-                _searchField(),
-                _category(),
-              ],
+      body: (_futureDoctorList == null)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : FutureBuilder<DoctorModel>(
+              future: _futureDoctorList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  doctorDataList = snapshot.data.data;
+
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            _header(),
+                            _searchField(),
+                            _category(),
+                          ],
+                        ),
+                      ),
+                      _doctorsList()
+                    ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Padding(
+                    padding: const EdgeInsets.all(30.0),
+                    child: Center(child: Text("${snapshot.error}")),
+                  );
+                }
+                return CircularProgressIndicator();
+              },
             ),
-          ),
-          _doctorsList()
-        ],
-      ),
     );
   }
 }

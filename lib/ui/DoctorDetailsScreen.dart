@@ -1,4 +1,4 @@
-import 'package:com/models/dactor_model.dart';
+import 'package:com/models/DoctorDataModel.dart';
 import 'package:com/theme/light_color.dart';
 import 'package:com/theme/text_styles.dart';
 import 'package:com/theme/theme.dart';
@@ -10,14 +10,14 @@ import 'package:flutter/material.dart';
 
 class DetailPage extends StatefulWidget {
   DetailPage({Key key, this.model}) : super(key: key);
-  final DoctorModel model;
+  final DoctorDataModel model;
 
   @override
   _DetailPageState createState() => _DetailPageState();
 }
 
 class _DetailPageState extends State<DetailPage> {
-  DoctorModel model;
+  DoctorDataModel model;
   @override
   void initState() {
     model = widget.model;
@@ -55,7 +55,7 @@ class _DetailPageState extends State<DetailPage> {
         bottom: false,
         child: Stack(
           children: <Widget>[
-            Image.asset(model.image),
+            Image.network(model.image),
             DraggableScrollableSheet(
               maxChildSize: .8,
               initialChildSize: .6,
@@ -109,7 +109,7 @@ class _DetailPageState extends State<DetailPage> {
                         Row(
                           children: <Widget>[
                             ProgressWidget(
-                                value: model.goodReviews,
+                                value: model.goodreviews,
                                 totalValue: 100,
                                 activeColor: LightColor.purpleExtraLight,
                                 backgroundColor:
@@ -117,7 +117,7 @@ class _DetailPageState extends State<DetailPage> {
                                 title: "Good Review",
                                 durationTime: 500),
                             ProgressWidget(
-                                value: model.totalScore,
+                                value: model.totalscore,
                                 totalValue: 100,
                                 activeColor: LightColor.purpleLight,
                                 backgroundColor:

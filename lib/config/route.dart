@@ -1,6 +1,6 @@
-import 'package:com/ui/detail_page.dart';
+import 'package:com/ui/DoctorDetailsScreen.dart';
+import 'package:com/ui/DoctorHomeScreen.dart';
 import 'package:com/ui/home.dart';
-import 'package:com/ui/home_page.dart';
 import 'package:com/widgets/coustom_route.dart';
 import 'package:flutter/material.dart';
 
@@ -19,12 +19,22 @@ class Routes {
     switch (pathElements[1]) {
       case "HomePage":
         return CustomRoute<bool>(
-            builder: (BuildContext context) => HomePage(model: settings.arguments,));
+          builder: (BuildContext context) => HomePage(
+            model: settings.arguments,
+          ),
+        );
       case "DetailPage":
         return CustomRoute<bool>(
-            builder: (BuildContext context) => DetailPage(
-                  model: settings.arguments,
-                ));
+          builder: (BuildContext context) => DetailPage(
+            model: settings.arguments,
+          ),
+        );
+      case "LoginPage":
+        return CustomRoute<bool>(
+          builder: (BuildContext context) => DetailPage(
+            model: settings.arguments,
+          ),
+        );
     }
   }
 }

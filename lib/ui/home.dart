@@ -15,7 +15,7 @@ class Home extends StatefulWidget {
 
 class CurrentHome extends State<Home> {
 
-  void _home() => Navigation.navigateToFirst(context);
+  void _home() => Navigation.navigateToLoginScreen(context);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class CurrentHome extends State<Home> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 40.0,
-                                color: Colors.red,
+                                color: Color.fromRGBO(143, 148, 251, 1),
                             ),
                           ),
                           Text(
@@ -59,7 +59,7 @@ class CurrentHome extends State<Home> {
                                     fontSize: 25.0,
                                     color: Colors.white),
                               ),
-                              color: Colors.red,
+                              color: Color.fromRGBO(143, 148, 251, 1),
                               shape: new RoundedRectangleBorder(
                                   borderRadius:
                                   new BorderRadius.circular(20.0)),
