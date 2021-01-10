@@ -5,12 +5,14 @@ class ActiveProjectsCard extends StatelessWidget {
   final double loadingPercent;
   final String title;
   final String subtitle;
+  final String image;
 
   ActiveProjectsCard({
     this.cardColor,
     this.loadingPercent,
     this.title,
     this.subtitle,
+    this.image,
   });
 
   @override
@@ -33,7 +35,7 @@ class ActiveProjectsCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Image.asset(
-                'assets/user.png',
+                image,
                 height: 75.0,
                 width: 75.0,
               ),

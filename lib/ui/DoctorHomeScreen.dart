@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import 'ViewMoreScreen.dart';
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, Object model}) : super(key: key);
 
@@ -22,6 +24,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<DoctorDataModel> doctorDataList;
+  List<DoctorDataModel> depressionSpecialistList;
+  List<DoctorDataModel> covid19SpecualistList;
+  List<DoctorDataModel> mentalHealthList;
   String name = "Name";
   String token;
   Future<DoctorModel> _futureDoctorList;
@@ -160,12 +165,21 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: <Widget>[
-              _categoryCard("Chemist & Drugist", "350 + Stores",
-                  color: LightColor.green, lightColor: LightColor.lightGreen),
-              _categoryCard("Covid - 19 Specilist", "899 Doctors",
-                  color: LightColor.skyBlue, lightColor: LightColor.lightBlue),
-              _categoryCard("Cardiologists Specilist", "500 + Doctors",
-                  color: LightColor.orange, lightColor: LightColor.lightOrange)
+              _categoryCard("Depression Specialist", "350 + Stores",
+                  color: LightColor.green,
+                  lightColor: LightColor.lightGreen,
+                  i: 1),
+              _categoryCard(
+                "Covid - 19 Specilist",
+                "899 Doctors",
+                color: LightColor.skyBlue,
+                lightColor: LightColor.lightBlue,
+                i: 2,
+              ),
+              _categoryCard("Mental Health", "500 + Doctors",
+                  color: LightColor.orange,
+                  lightColor: LightColor.lightOrange,
+                  i: 3)
             ],
           ),
         ),
@@ -174,64 +188,95 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _categoryCard(String title, String subtitle,
-      {Color color, Color lightColor}) {
+      {Color color, Color lightColor, int i}) {
     TextStyle titleStyle = TextStyles.title.bold.white;
     TextStyle subtitleStyle = TextStyles.body.bold.white;
     if (AppTheme.fullWidth(context) < 392) {
       titleStyle = TextStyles.body.bold.white;
       subtitleStyle = TextStyles.bodySm.bold.white;
     }
-    return AspectRatio(
-      aspectRatio: 6 / 8,
-      child: Container(
-        height: 280,
-        width: AppTheme.fullWidth(context) * .3,
-        margin: EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 10),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              offset: Offset(4, 4),
-              blurRadius: 10,
-              color: lightColor.withOpacity(.8),
-            )
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          child: Container(
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  top: -20,
-                  left: -20,
-                  child: CircleAvatar(
-                    backgroundColor: lightColor,
-                    radius: 60,
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Flexible(
-                      child: Text(title, style: titleStyle).hP8,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Flexible(
-                      child: Text(
-                        subtitle,
-                        style: subtitleStyle,
-                      ).hP8,
-                    ),
-                  ],
-                ).p16
-              ],
+    return GestureDetector(
+      onTap: () {
+        if (i == 1) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ViewMoreScreen(doctorDataList: depressionSpecialistList),
             ),
+          );
+        }
+        if (i == 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ViewMoreScreen(doctorDataList: covid19SpecualistList),
+            ),
+          );
+        }
+        if (i == 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  ViewMoreScreen(doctorDataList: mentalHealthList),
+            ),
+          );
+        }
+      },
+      child: AspectRatio(
+        aspectRatio: 6 / 8,
+        child: Container(
+          height: 280,
+          width: AppTheme.fullWidth(context) * .3,
+          margin: EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 10),
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                offset: Offset(4, 4),
+                blurRadius: 10,
+                color: lightColor.withOpacity(.8),
+              )
+            ],
           ),
-        ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            child: Container(
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    top: -20,
+                    left: -20,
+                    child: CircleAvatar(
+                      backgroundColor: lightColor,
+                      radius: 60,
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Flexible(
+                        child: Text(title, style: titleStyle).hP8,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Flexible(
+                        child: Text(
+                          subtitle,
+                          style: subtitleStyle,
+                        ).hP8,
+                      ),
+                    ],
+                  ).p16
+                ],
+              ),
+            ),
+          ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(20))),
+        ),
       ),
     );
   }
@@ -356,6 +401,18 @@ class _HomePageState extends State<HomePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   doctorDataList = snapshot.data.data;
+
+                  for (int i = 0; i < doctorDataList.length; i++) {
+                    if (doctorDataList[i] == 'Depression') {
+                      depressionSpecialistList.add(doctorDataList[i]);
+                    }
+                    if (doctorDataList[i] == 'Covid19') {
+                      covid19SpecualistList.add(doctorDataList[i]);
+                    }
+                    if (doctorDataList[i] == 'MentalHealth') {
+                      mentalHealthList.add(doctorDataList[i]);
+                    }
+                  }
 
                   return CustomScrollView(
                     slivers: <Widget>[

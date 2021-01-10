@@ -293,6 +293,7 @@ class _MyHomePageState extends State<ResultSection> {
         ],
       );
     }
+
     var chartWidget = new SizedBox(
       height: 200,
       width: 200,
@@ -368,7 +369,7 @@ class _MyHomePageState extends State<ResultSection> {
                             icon: Icons.alarm,
                             iconBackgroundColor: LightColors.kDarkYellow,
                             title: 'Depression',
-                            subtitle: depressionPercentage.toString()+"%",
+                            subtitle: depressionPercentage.toString() + "%",
                           ),
                           SizedBox(
                             height: 15.0,
@@ -377,14 +378,14 @@ class _MyHomePageState extends State<ResultSection> {
                             icon: Icons.blur_circular,
                             iconBackgroundColor: LightColors.kRed,
                             title: 'Stress',
-                            subtitle: stressPercentage.toString()+"%",
+                            subtitle: stressPercentage.toString() + "%",
                           ),
                           SizedBox(height: 15.0),
                           TaskColumn(
                             icon: Icons.check_circle_outline,
                             iconBackgroundColor: LightColors.kLightGreen,
                             title: 'Anxiety',
-                            subtitle: anxietyPercentage.toString()+"%",
+                            subtitle: anxietyPercentage.toString() + "%",
                           ),
                         ],
                       ),
@@ -404,13 +405,15 @@ class _MyHomePageState extends State<ResultSection> {
                                 flex: 1,
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigation.navigateToDoctorsSection(context);
+                                    Navigation.navigateToDoctorsSection(
+                                        context);
                                   },
                                   child: ActiveProjectsCard(
                                     cardColor: LightColors.kGreen,
                                     loadingPercent: 0.25,
                                     title: 'Medical App',
                                     subtitle: 'Seek professional help',
+                                    image: 'assets/doctoricon.png',
                                   ),
                                 ),
                               ),
@@ -418,14 +421,16 @@ class _MyHomePageState extends State<ResultSection> {
                               Expanded(
                                 flex: 1,
                                 child: GestureDetector(
-                                  onTap: (){
+                                  onTap: () {
                                     Navigation.navigateToChatBot(context);
                                   },
                                   child: ActiveProjectsCard(
                                     cardColor: Color.fromRGBO(143, 148, 251, 1),
                                     loadingPercent: 0.6,
                                     title: 'Ask your doubts',
-                                    subtitle: 'A chatbot to ask anything you want',
+                                    subtitle:
+                                        'A chatbot to ask anything you want',
+                                    image: 'assets/chatboticon.png',
                                   ),
                                 ),
                               ),
@@ -436,15 +441,16 @@ class _MyHomePageState extends State<ResultSection> {
                               Expanded(
                                 flex: 1,
                                 child: GestureDetector(
-                                  onTap:(){
-                                    Share.share('Hey! can you help me? I am not feeling well.');
-
+                                  onTap: () {
+                                    Share.share(
+                                        'Hey! can you help me? I am not feeling well.');
                                   },
                                   child: ActiveProjectsCard(
                                     cardColor: Color.fromRGBO(143, 148, 251, 1),
                                     loadingPercent: 0.45,
                                     title: 'Chat with friends',
                                     subtitle: 'Go and chat with your friends',
+                                    image: 'assets/messageicon.png',
                                   ),
                                 ),
                               ),
@@ -452,14 +458,16 @@ class _MyHomePageState extends State<ResultSection> {
                               Expanded(
                                 flex: 1,
                                 child: GestureDetector(
-                                  onTap: (){
-
+                                  onTap: () {
+                                    Navigation.navigateToDrawingUi(context);
                                   },
                                   child: ActiveProjectsCard(
                                     cardColor: LightColors.kBlue,
                                     loadingPercent: 0.9,
                                     title: 'Draw something',
                                     subtitle: 'Drawing relives stress level',
+                                    image: 'assets/drawingicon.png',
+
                                   ),
                                 ),
                               ),
