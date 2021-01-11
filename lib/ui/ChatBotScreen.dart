@@ -1,8 +1,8 @@
+import 'dart:convert';
+
+import 'package:com/models/BotResponseModel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialogflow/utils/language.dart';
-import 'package:flutter_dialogflow/v2/auth_google.dart';
-import 'package:flutter_dialogflow/v2/dialogflow_v2.dart';
-import 'package:flutter_dialogflow/v2/message.dart';
+import 'package:http/http.dart' as http;
 
 class ChatbotScreen extends StatefulWidget {
   @override
@@ -12,6 +12,7 @@ class ChatbotScreen extends StatefulWidget {
 class _ChatbotScreenState extends State<ChatbotScreen> {
   final List<ChatMessage> _messages = <ChatMessage>[];
   final TextEditingController _textController = new TextEditingController();
+  String BOT_URL="http://localhost:5005/webhooks/rest/webhook";
 
   Widget _buildTextComposer() {
     return new IconTheme(
@@ -25,7 +26,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
                 decoration:
-                    new InputDecoration.collapsed(hintText: "Send a message"),
+                new InputDecoration.collapsed(hintText: "Send a message"),
               ),
             ),
             new Container(
@@ -40,37 +41,18 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     );
   }
 
-  void Response(query) async {
-    _textController.clear();
-    AuthGoogle authGoogle =
-        await AuthGoogle(fileJson: "assets/credentials.json").build();
-    Dialogflow dialogflow =
-        Dialogflow(authGoogle: authGoogle, language: Language.english);
-    AIResponse response = await dialogflow.detectIntent(query);
-    print("response" + response.getMessage());
-
-    ChatMessage message = new ChatMessage(
-      text: response.getMessage() ??
-          new CardDialogflow(response.getListMessage()[0]).title,
-      name: "Bot",
-      type: false,
-    );
-    setState(() {
-      _messages.insert(0, message);
-    });
-  }
 
   void _handleSubmitted(String text) {
     _textController.clear();
     ChatMessage message = new ChatMessage(
       text: text,
-      name: "Promise",
+      name: "Anonymous",
       type: true,
     );
     setState(() {
       _messages.insert(0, message);
     });
-    Response(text);
+    displayResponse(text);
   }
 
   @override
@@ -78,22 +60,16 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     return new Scaffold(
       appBar: new AppBar(
         centerTitle: true,
-        backgroundColor: Color.fromRGBO(143, 148, 251, 1),
-        title: new Text(
-          "ChatBot",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
+        title: new Text("Talk to us please!"),
       ),
       body: new Column(children: <Widget>[
         new Flexible(
             child: new ListView.builder(
-          padding: new EdgeInsets.all(8.0),
-          reverse: true,
-          itemBuilder: (_, int index) => _messages[index],
-          itemCount: _messages.length,
-        )),
+              padding: new EdgeInsets.all(8.0),
+              reverse: true,
+              itemBuilder: (_, int index) => _messages[index],
+              itemCount: _messages.length,
+            )),
         new Divider(height: 1.0),
         new Container(
           decoration: new BoxDecoration(color: Theme.of(context).cardColor),
@@ -101,6 +77,41 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
         ),
       ]),
     );
+  }
+
+  void displayResponse(String text) async{
+    _textController.clear();
+    final http.Response response = await http.post(BOT_URL, body: jsonEncode(<String,String>{
+      "sender":"test_user",
+      "message" : text
+    }),
+
+
+        headers: <String,String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        });
+
+    print(response.body);
+    ChatMessage message = new ChatMessage(
+      text: response.body.isEmpty ? "NO data":BotResponse.fromJson(jsonDecode(response.body)).response[0].text,
+      // new Future<BotResponse>(response.getListMessage()[0]).title,
+      name: "Bot",
+      type: false,
+    );
+    setState(() {
+      _messages.insert(0, message);
+    });
+    // return BotResponse.fromJson(jsonDecode(response.body)).response;
+
+    // if (response.statusCode == 201) {
+    //   // If the server did return a 201 CREATED response,
+    //   // then parse the JSON.
+    //   return BotResponse.fromJson(jsonDecode(response.body));
+    // } else {
+    //   // If the server did not return a 201 CREATED response,
+    //   // then throw an exception.
+    //   throw Exception('Failed to load response');
+    // }
   }
 }
 
@@ -151,9 +162,9 @@ class ChatMessage extends StatelessWidget {
         margin: const EdgeInsets.only(left: 16.0),
         child: new CircleAvatar(
             child: new Text(
-          this.name[0],
-          style: new TextStyle(fontWeight: FontWeight.bold),
-        )),
+              this.name[0],
+              style: new TextStyle(fontWeight: FontWeight.bold),
+            )),
       ),
     ];
   }
@@ -169,3 +180,4 @@ class ChatMessage extends StatelessWidget {
     );
   }
 }
+
