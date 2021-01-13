@@ -1,9 +1,7 @@
 import 'package:com/colors/LightColors.dart';
 import 'package:com/theme/light_color.dart';
 import 'package:com/util/Constants.dart';
-import 'package:com/util/FadeAnimation.dart';
 import 'package:com/util/navigation.dart';
-import 'package:com/util/strings.dart';
 import 'package:com/widgets/ActiveProjectCard.dart';
 import 'package:com/widgets/TaskColumn.dart';
 import 'package:com/widgets/TopContainerWidget.dart';
@@ -11,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:share/share.dart';
-import 'dart:math';
 
 class ResultSection extends StatefulWidget {
   @override

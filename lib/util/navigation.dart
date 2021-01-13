@@ -1,6 +1,7 @@
 import 'package:com/ui/ChatBotScreen.dart';
 import 'package:com/ui/DoctorHomeScreen.dart';
-import 'package:com/ui/DrawingUi.dart';
+import 'package:com/ui/DoctorMore.dart';
+import 'package:com/ui/DrawingScreen.dart';
 import 'package:com/ui/LoginScreen.dart';
 import 'package:com/ui/ResultScreen.dart';
 import 'package:com/ui/UserDetailsScreen.dart';
@@ -41,6 +42,9 @@ class Navigation{
 
     static void navigateToDrawingUi(BuildContext context) => Navigator.push(
       context, MaterialPageRoute(builder: (_) => DrawingUi()));
+
+    static void navigateToMoreDoctorScreen(BuildContext context,String string) => Navigator.push(
+      context, MaterialPageRoute(builder: (_) => DoctorMoreScreen(dtype: string)));
 
   static void popNavigation(context) => Navigator.of(context).pop(true);
 }

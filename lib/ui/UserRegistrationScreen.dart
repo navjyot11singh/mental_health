@@ -378,7 +378,7 @@ class _UserRegistrationScreenState extends State<UserRegistrationScreen> {
 
   Future<UserRegistration> registerApiHit(String name, String email,
       String password, String phone, String gender, String address) async {
-    final uri = 'https://moodpath1.herokuapp.com/user';
+    final uri = 'https://minorp.herokuapp.com/user';
     var requestBody = {
       'name': name,
       'email': email,

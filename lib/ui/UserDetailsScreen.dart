@@ -39,7 +39,7 @@ class _UserDetailsScreebState extends State<UserDetailsScreeb> {
   }
 
   Future<UserDetailsModel> fetchUserDetails() async {
-    final uri = 'https://moodpath1.herokuapp.com/user/me';
+    final uri = 'https://minorp.herokuapp.com/user/me';
 
     final response = await http.get(uri, headers: {
       'x-auth-token': token //do token work

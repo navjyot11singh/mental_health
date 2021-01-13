@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:com/models/DoctorDataModel.dart';
 import 'package:com/theme/light_color.dart';
 import 'package:com/theme/text_styles.dart';
@@ -6,7 +8,7 @@ import 'package:com/theme/extention.dart';
 import 'package:com/widgets/progress_widget.dart';
 import 'package:com/widgets/rating_start.dart';
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailPage extends StatefulWidget {
   DetailPage({Key key, this.model}) : super(key: key);
@@ -18,6 +20,7 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   DoctorDataModel model;
+
   @override
   void initState() {
     model = widget.model;
@@ -43,6 +46,27 @@ class _DetailPageState extends State<DetailPage> {
     );
   }
 
+  _textMe() async {
+    if (Platform.isAndroid) {
+      const uri =
+          'sms:+91 7011258097 ?body=hello%20there\nBook an appointment for me please!';
+      await launch(uri);
+    } else if (Platform.isIOS) {
+      // iOS
+      const uri = 'sms:0039-222-060-888&body=hello%20there';
+      await launch(uri);
+    }
+  }
+
+  _launchCaller() async {
+    const url = "tel:+91 7011258097";
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     TextStyle titleStyle = TextStyles.title.copyWith(fontSize: 25).bold;
@@ -63,7 +87,8 @@ class _DetailPageState extends State<DetailPage> {
               builder: (context, scrollController) {
                 return Container(
                   height: AppTheme.fullHeight(context) * .5,
-                  padding: EdgeInsets.only(left:19,right:19,top: 16),//symmetric(horizontal: 19, vertical: 16),
+                  padding: EdgeInsets.only(left: 19, right: 19, top: 16),
+                  //symmetric(horizontal: 19, vertical: 16),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(30),
@@ -150,11 +175,18 @@ class _DetailPageState extends State<DetailPage> {
                               height: 45,
                               width: 45,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: LightColor.grey.withAlpha(150)
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: LightColor.grey.withAlpha(150)),
+                              child: Icon(
+                                Icons.call,
+                                color: Colors.white,
                               ),
-                              child: Icon(Icons.call, color: Colors.white,),
-                            ).ripple((){}, borderRadius:BorderRadius.circular(10), ),
+                            ).ripple(
+                              () {
+                                _launchCaller();
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             SizedBox(
                               width: 10,
                             ),
@@ -162,21 +194,30 @@ class _DetailPageState extends State<DetailPage> {
                               height: 45,
                               width: 45,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: LightColor.grey.withAlpha(150)
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: LightColor.grey.withAlpha(150)),
+                              child: Icon(
+                                Icons.chat_bubble,
+                                color: Colors.white,
                               ),
-                              child: Icon(Icons.chat_bubble, color: Colors.white,),
-                            ).ripple((){}, borderRadius:BorderRadius.circular(10), ),
+                            ).ripple(
+                              () {
+                                _textMe();
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             SizedBox(
                               width: 10,
                             ),
                             FlatButton(
                               color: Theme.of(context).primaryColor,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)
-                              ),
+                                  borderRadius: BorderRadius.circular(10)),
                               onPressed: () {},
-                              child: Text("Make an appointment", style: TextStyles.titleNormal.white,).p(10),
+                              child: Text(
+                                "Make an appointment",
+                                style: TextStyles.titleNormal.white,
+                              ).p(10),
                             ),
                           ],
                         ).vP16

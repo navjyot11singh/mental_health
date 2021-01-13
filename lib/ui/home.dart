@@ -1,6 +1,3 @@
-
-
-
 import 'package:com/util/navigation.dart';
 import 'package:com/util/strings.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +11,6 @@ class Home extends StatefulWidget {
 }
 
 class CurrentHome extends State<Home> {
-
   void _home() => Navigation.navigateToLoginScreen(context);
 
   @override
@@ -35,9 +31,9 @@ class CurrentHome extends State<Home> {
                             "welcome!\n",
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 40.0,
-                                color: Color.fromRGBO(143, 148, 251, 1),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
+                              color: Color.fromRGBO(143, 148, 251, 1),
                             ),
                           ),
                           Text(
@@ -62,24 +58,18 @@ class CurrentHome extends State<Home> {
                               color: Color.fromRGBO(143, 148, 251, 1),
                               shape: new RoundedRectangleBorder(
                                   borderRadius:
-                                  new BorderRadius.circular(20.0)),
+                                      new BorderRadius.circular(20.0)),
                             ),
-                            margin: EdgeInsets.only(
-                                top: 30.0
-                            ),
+                            margin: EdgeInsets.only(top: 30.0),
                           )
                         ],
                       ),
-                    )
-                )
-            ),
+                    ))),
             constraints: BoxConstraints(
                 maxHeight: 400.0,
                 maxWidth: 350.0,
                 minWidth: 300.0,
-                minHeight: 200.0
-            )
-        ),
+                minHeight: 200.0)),
       ),
     );
   }

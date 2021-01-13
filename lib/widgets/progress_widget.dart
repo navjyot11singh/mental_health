@@ -51,7 +51,7 @@ class _ProgressWidgetState extends State<ProgressWidget>
     if (backgroundColor == null) {
       backgroundColor = Theme.of(context).disabledColor;
     }
-    final inCurve = ElasticOutCurve(0.38);
+    // final inCurve = ElasticOutCurve(0.38);
     return Container(
       height: dimenstion,
       width: dimenstion,

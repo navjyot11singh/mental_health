@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:com/models/BotResponseModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -116,7 +115,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
 }
 
 class ChatMessage extends StatelessWidget {
-  ChatMessage({this.text, this.name, this.type});
+  ChatMessage({ this.text, this.name, this.type});
 
   final String text;
   final String name;
@@ -132,7 +131,7 @@ class ChatMessage extends StatelessWidget {
         child: new Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            new Text(this.name,
+            new Text(this.name!=null?this.name:"We are working on this! try another one",//look into this
                 style: new TextStyle(fontWeight: FontWeight.bold)),
             new Container(
               margin: const EdgeInsets.only(top: 5.0),

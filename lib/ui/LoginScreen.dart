@@ -276,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<Login> emailApiHit(String email, String password) async {
-    final uri = 'https://moodpath1.herokuapp.com/auth';
+    final uri = 'https://minorp.herokuapp.com/auth';
     var requestBody = {
       'email': email,
       'password': password,
