@@ -62,9 +62,9 @@ class _MyHomePageState extends State<ResultSection> {
         Constants.thirdSection.anxiety;
 
     int total = depression + stress + anxiety;
-    double depressionPercentage = depression / total;
-    double stressPercentage = stress / total;
-    double anxietyPercentage = anxiety / total;
+    double depressionPercentage = (depression / total)*100;
+    double stressPercentage = (stress / total)*100;
+    double anxietyPercentage =(anxiety / total)*100;
 
     final key = new GlobalKey<ScaffoldState>();
     // void _print(String text) =>
